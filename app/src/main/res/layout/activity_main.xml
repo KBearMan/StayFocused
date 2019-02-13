@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bearhat.stayfocused.MainActivity">
+    tools:context="com.bearhat.stayfocused.TimerScreenActivity">
 
     <Button
         android:id="@+id/actionButton"
@@ -41,6 +41,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:maxLength="2"
         android:numeric="integer"
         android:text="00"
         android:textAlignment="textStart"
