@@ -2,6 +2,7 @@ package com.bearhat.stayfocused
 
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
 
@@ -24,7 +25,7 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     override fun actionButtonPressed(){
         if( timerTime > 0) {
             if ((timerJob == null || !timerJob!!.isActive)) {
-                timerScreenView?.changeButtonText("Stop")
+                timerScreenView?.timerStatusChanged(true)
                 timerJob = GlobalScope.launch {
                     timerRunning = true
                     while (timerRunning) {
@@ -41,23 +42,29 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
                     }
                     //Timer finished, trigger alarm and restart loop
                     timerScreenView?.triggerAlarm()
-                    restartTimerLoop()
+                    GlobalScope.launch(Dispatchers.Main) {
+                        restartTimerLoop()
+                    }
                 }
             } else {
-                timerScreenView?.changeButtonText("Start")
+                timerScreenView?.timerStatusChanged(false)
                 timerJob!!.cancel()
             }
+        }else{
+            timerScreenView?.timerStatusChanged(false)
+            timerJob = null
         }
     }
 
     override fun timeEntered( minutes: Int, seconds: Int) {
         timerTime = seconds+minutes*60
-        timerInterval = timerTime
+        if(!timerRunning) {
+            timerInterval = timerTime
+        }
     }
 
     private fun sendUpdateTime(){
-        val hours = timerTime/3600
-        val minutes = (timerTime - (hours*3600))/60
+        val minutes = timerTime/60
         val seconds = timerTime%60
         timerUpdateData.value = TimerUpdate(minutes,seconds)
     }
