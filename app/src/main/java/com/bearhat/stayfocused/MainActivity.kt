@@ -1,14 +1,15 @@
 package com.bearhat.stayfocused
 
-import android.content.DialogInterface
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import android.os.Handler
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     var timerRunning = false
+    var mainLooper : Handler? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +29,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun stopTimer(){
         //TODO actually stop the timer
+
+        setTimerTextClickable(true)
         timerRunning = false
     }
 
     private fun startTimer(){
         if(checkForValidTimer()){
             //TODO actually start the timer
+            mainLooper = Handler()
+
+            setTimerTextClickable(false)
             timerRunning = true
 
         }else{
@@ -43,6 +49,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkForValidTimer():Boolean{
         //TODO check that the timer is not all 0's and is valid positive numbers
+        try{
+
+        }catch(e:Exception){
+
+        }
         return true
     }
 
@@ -57,5 +68,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun isTimerRunning():Boolean{
         return timerRunning
+    }
+
+    private fun setTimerTextClickable(clickable:Boolean){
+        minutesText.isClickable = clickable
+        secondsText.isClickable = clickable
     }
 }
