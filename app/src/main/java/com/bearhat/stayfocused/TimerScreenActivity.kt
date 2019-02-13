@@ -98,7 +98,7 @@ class TimerScreenActivity : AppCompatActivity(),View{
         data.observe(this,timerUpdateObservable)
     }
 
-    override fun timerStatusChanged(started:Boolean) {
+    override fun timerStatusChanged(started: Boolean, timerInterval: Int) {
         if(started){
             actionButton.text = "STOP"
             minutesText.clearFocus()
@@ -109,6 +109,10 @@ class TimerScreenActivity : AppCompatActivity(),View{
             actionButton.text = "START"
             minutesText.isClickable = true
             secondsText.isClickable = true
+            if(timerInterval > 0 ){
+                minutesText.setText(timerInterval/60)
+                secondsText.setText(timerInterval%60)
+            }
         }
     }
 

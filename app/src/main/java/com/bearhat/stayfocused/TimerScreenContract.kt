@@ -6,7 +6,7 @@ interface View {
     fun resetTimer()
     fun setTimerUpdateObservable(data:LiveData<TimerUpdate>)
     fun setStartingTimer(startTime:TimerUpdate)
-    fun timerStatusChanged(started:Boolean)
+    fun timerStatusChanged(started: Boolean, timerInterval: Int)
     fun triggerAlarm()
 }
 
