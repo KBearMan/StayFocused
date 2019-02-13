@@ -1,5 +1,6 @@
 package com.bearhat.stayfocused
 
+import android.app.AlarmManager
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -118,11 +119,11 @@ class TimerScreenActivity : AppCompatActivity(),View{
 
     override fun triggerAlarm() {
         val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        val vibrationDuration = 250L // in milliseconds
+        val vibrationDuration = 550L // in milliseconds
 
         for(i in 1..10) {
-            val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 50)
+            val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 250)
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
 
             // Vibrate for 3 sets of 500 milliseconds
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -132,7 +133,7 @@ class TimerScreenActivity : AppCompatActivity(),View{
                 v.vibrate(vibrationDuration)
             }
 
-            Thread.sleep(100)
+            Thread.sleep(150)
         }
     }
 
