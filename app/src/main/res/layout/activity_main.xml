@@ -7,7 +7,7 @@
     tools:context="com.bearhat.stayfocused.MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/actionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -20,12 +20,12 @@
 
     <EditText
         android:id="@+id/minutesText"
-        android:layout_width="87dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:numeric="integer"
         android:text="00"
         android:textAlignment="textEnd"
         android:textSize="30sp"
@@ -34,13 +34,14 @@
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <EditText
-        android:id="@+id/editText2"
-        android:layout_width="104dp"
+        android:id="@+id/secondsText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:numeric="integer"
         android:text="00"
         android:textAlignment="textStart"
         android:textSize="30sp"
