@@ -111,8 +111,8 @@ class TimerScreenActivity : AppCompatActivity(),View{
             minutesText.isClickable = true
             secondsText.isClickable = true
             if(timerInterval > 0 ){
-                minutesText.setText(timerInterval/60)
-                secondsText.setText(timerInterval%60)
+                minutesText.setText("${timerInterval/60}")
+                secondsText.setText("${timerInterval%60}")
             }
         }
     }
