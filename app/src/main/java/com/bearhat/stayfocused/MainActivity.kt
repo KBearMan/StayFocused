@@ -4,11 +4,14 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.delay
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     var timerRunning = false
     var mainLooper : Handler? = null
+    var timerStartTime: Date? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +39,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun startTimer(){
         if(checkForValidTimer()){
-            //TODO actually start the timer
             mainLooper = Handler()
-
+            val cal = Calendar.getInstance()
+            cal.time = Date()
+            cal.set(Calendar.MINUTE,cal.get(Calendar.MINUTE + minutesText.text.toString().toInt()))
+            cal.set(Calendar.SECOND,cal.get(Calendar.SECOND + secondsText.text.toString().toInt()))
+            timerStartTime = cal.time
+            runTimer()
             setTimerTextClickable(false)
             timerRunning = true
 
         }else{
             showInvalidInputDialog()
+        }
+    }
+
+    private fun runTimer(){
+        mainLooper?.post{
+            //TODO check if timer is out, else update
+            if(Date().after(timerStartTime)){
+                //Timer done
+
+            }else{
+                // Timer not done
+                updateTimerUI()
+                Thread.sleep(1000) // 1 second
+                runTimer()
+            }
+
         }
     }
 
@@ -55,6 +78,10 @@ class MainActivity : AppCompatActivity() {
 
         }
         return true
+    }
+
+    private fun updateTimerUI(){
+
     }
 
     private fun showInvalidInputDialog(){
