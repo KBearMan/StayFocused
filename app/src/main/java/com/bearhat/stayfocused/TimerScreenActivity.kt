@@ -21,7 +21,6 @@ import android.media.AudioManager
 
 
 class TimerScreenActivity : AppCompatActivity(),View{
-
     lateinit var timerScreenPresenter:TimerScreenPresenter
 
     // Create the observer which updates the UI.
@@ -34,6 +33,11 @@ class TimerScreenActivity : AppCompatActivity(),View{
         setContentView(R.layout.activity_main)
         timerScreenPresenter = ViewModelProviders.of(this).get(TimerScreenPresenter::class.java)
         timerScreenPresenter.takeView(this)
+        configureAlarmUI()
+        configureAlarmSettingsUI()
+    }
+
+    fun configureAlarmUI(){
         actionButton.setOnClickListener { timerScreenPresenter.actionButtonPressed() }
         minutesText.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -83,6 +87,80 @@ class TimerScreenActivity : AppCompatActivity(),View{
                 }
             }
         })
+    }
+
+    fun configureAlarmSettingsUI(){
+        enableLoopingSwitch.setOnClickListener { timerScreenPresenter.enableRepeatSwitched() }
+        enableSoundSwitch.setOnClickListener { timerScreenPresenter.enableSoundSwitched() }
+        enableVibrateSwitch.setOnClickListener { timerScreenPresenter.enableVibateSwitched() }
+        vibateNumberText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val numToReturn = if(s.toString().isNotEmpty()) {
+                    s.toString().toInt()
+                }else{
+                    0
+                }
+                timerScreenPresenter.vibateNumPulseChanged(numToReturn)
+            }
+        })
+
+        vibrateDurationText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val numToReturn = if(s.toString().isNotEmpty()) {
+                    s.toString().toFloat()
+                }else{
+                    0F
+                }
+                timerScreenPresenter.vibateDurationChanged(numToReturn)
+            }
+        })
+
+        soundNumberText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val numToReturn = if(s.toString().isNotEmpty()) {
+                    s.toString().toInt()
+                }else{
+                    0
+                }
+                timerScreenPresenter.soundNumBeepChanged(numToReturn)
+            }
+        })
+
+        soundDurationText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val numToReturn = if(s.toString().isNotEmpty()) {
+                    s.toString().toFloat()
+                }else{
+                    0F
+                }
+                timerScreenPresenter.soundDurationChanged(numToReturn)
+            }
+        })
+
     }
 
     override fun setStartingTimer(startTime: TimerUpdate) {
@@ -135,6 +213,46 @@ class TimerScreenActivity : AppCompatActivity(),View{
 
             Thread.sleep(150)
         }
+    }
+
+    override fun setRepeatSwitch(isEnabled: Boolean) {
+        enableLoopingSwitch.isChecked = isEnabled
+    }
+
+    override fun setSoundSwitch(isEnabled: Boolean) {
+        enableSoundSwitch.isChecked = isEnabled
+        if(isEnabled){
+            soundDurationText.isClickable = true
+            soundNumberText.isClickable = true
+            soundSettingsArea.setBackgroundResource(R.drawable.bg_active_settings_border)
+        }else{
+            soundDurationText.isClickable = false
+            soundNumberText.isClickable = false
+            soundSettingsArea.setBackgroundResource(R.drawable.bg_inactive_settings_border)
+        }
+    }
+
+    override fun setVibrateSwitch(isEnabled: Boolean) {
+        enableVibrateSwitch.isChecked = isEnabled
+        if(isEnabled){
+            vibrateDurationText.isClickable = true
+            vibateNumberText.isClickable = true
+            vibateSettingsArea.setBackgroundResource(R.drawable.bg_active_settings_border)
+        }else{
+            vibrateDurationText.isClickable = false
+            vibateNumberText.isClickable = false
+            vibateSettingsArea.setBackgroundResource(R.drawable.bg_inactive_settings_border)
+        }
+    }
+
+    override fun populateVibateSettings(numPulses: Int, duration: Float) {
+        vibateNumberText.setText(numPulses.toString())
+        vibrateDurationText.setText(duration.toString())
+    }
+
+    override fun populateSoundSettings(numPulses: Int, duration: Float) {
+        soundNumberText.setText(numPulses.toString())
+        soundDurationText.setText(duration.toString())
     }
 
     private fun setTimerText(update:TimerUpdate){

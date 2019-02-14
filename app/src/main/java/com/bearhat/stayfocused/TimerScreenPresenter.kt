@@ -11,6 +11,9 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     private var timerJob:Job? = null
     private var timerTime = 0
     private var timerInterval = 0
+    private var vibrateEnabled = true
+    private var repeatEnabled = true
+    private var soundEnabled = true
 
     override fun takeView(view: View) {
         timerScreenView = view
@@ -64,6 +67,38 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
             timerInterval = timerTime
         }
     }
+
+    override fun enableVibateSwitched() {
+        vibrateEnabled = !vibrateEnabled
+        timerScreenView?.setVibrateSwitch(vibrateEnabled)
+    }
+
+    override fun enableRepeatSwitched() {
+        repeatEnabled = !repeatEnabled
+        timerScreenView?.setRepeatSwitch(repeatEnabled)
+    }
+
+    override fun enableSoundSwitched() {
+        soundEnabled = !soundEnabled
+        timerScreenView?.setSoundSwitch(soundEnabled)
+    }
+
+    override fun vibateDurationChanged(duration: Float) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun vibateNumPulseChanged(num: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun soundDurationChanged(duration: Float) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun soundNumBeepChanged(num: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     private fun sendUpdateTime(){
         val minutes = timerTime/60
