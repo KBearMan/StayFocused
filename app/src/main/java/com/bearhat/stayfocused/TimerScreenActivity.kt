@@ -162,11 +162,6 @@ class TimerScreenActivity : AppCompatActivity(),View{
 
     }
 
-    override fun setStartingTimer(startTime: TimerUpdate) {
-        setTimerText(startTime)
-    }
-
-
     override fun resetTimer() {
         minutesText.setText("")
         secondsText.setText("")

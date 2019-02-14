@@ -5,7 +5,6 @@ import android.arch.lifecycle.LiveData
 interface View {
     fun resetTimer()
     fun setTimerUpdateObservable(data:LiveData<TimerUpdate>)
-    fun setStartingTimer(startTime:TimerUpdate)
     fun timerStatusChanged(started: Boolean, timerInterval: Int)
     fun setRepeatSwitch(isEnabled:Boolean)
     fun setSoundSwitch(isEnabled:Boolean)

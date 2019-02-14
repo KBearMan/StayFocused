@@ -36,9 +36,9 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     override fun actionButtonPressed(){
         if( timerTime > 0) {
             if ((timerJob == null || !timerJob!!.isActive)) {
+                timerRunning = true
                 timerScreenView?.timerStatusChanged(true, timerInterval)
                 timerJob = GlobalScope.launch {
-                    timerRunning = true
                     while (timerRunning) {
                         delay(1000)
                         if(timerTime<=0){
@@ -47,26 +47,18 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
                         }else {
                             withContext(Dispatchers.Main) {
                                 timerTime--
-                                sendUpdateTime()
+                                sendUpdateTime(timerTime)
                             }
                         }
                     }
-                    //Timer finished, trigger alarm and restart loop
+                    //Timer finished, trigger alarm
                     triggerAlarm()
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val minutes = timerInterval/60
-                        val seconds = timerInterval%60
-                        timerUpdateData.value = TimerUpdate(minutes,seconds)
-                        restartTimerLoop()
-                    }
                 }
             } else {
-                timerScreenView?.timerStatusChanged(false, timerInterval)
-                timerJob!!.cancel()
+                stopTimer()
             }
         }else{
-            timerScreenView?.timerStatusChanged(false,timerInterval)
-            timerJob = null
+            stopTimer()
         }
     }
 
@@ -108,21 +100,33 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
         soundCount = num
     }
 
-    private fun sendUpdateTime(){
-        val minutes = timerTime/60
-        val seconds = timerTime%60
+    private fun sendUpdateTime(timerToSend:Int){
+        val minutes = timerToSend/60
+        val seconds = timerToSend%60
         timerUpdateData.value = TimerUpdate(minutes,seconds)
     }
 
     private fun restartTimerLoop(){
-        if(repeatEnabled) {
             timerTime = timerInterval
-            timerJob = null
+        if(repeatEnabled) {
             actionButtonPressed()
+        }else{
+            stopTimer()
         }
+    }
+
+    private fun stopTimer(){
+        timerRunning = false
+        timerScreenView?.timerStatusChanged(false,timerInterval)
+        timerJob?.cancel()
+        timerJob= null
     }
 
     private fun triggerAlarm(){
         timerScreenView?.triggerAlarm(vibrateDuration,vibrateCount,soundDuration,soundCount)
+        GlobalScope.launch(Dispatchers.Main) {
+            sendUpdateTime(timerInterval) // reset the UI to the original value
+            restartTimerLoop()
+        }
     }
 }
