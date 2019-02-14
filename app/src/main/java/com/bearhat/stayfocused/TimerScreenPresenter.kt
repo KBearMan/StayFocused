@@ -5,6 +5,9 @@ import kotlinx.coroutines.*
 
 class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
 
+    private val DEFAULT_ALARM_COUNT = 10
+    private val DEFAULT_ALARM_DURATION = 550L
+
     private var timerScreenView:  View? = null
     private var timerUpdateData : MutableLiveData<TimerUpdate> = MutableLiveData()
     private var timerRunning = false
@@ -14,6 +17,12 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     private var vibrateEnabled = true
     private var repeatEnabled = true
     private var soundEnabled = true
+    private var vibrateDuration = DEFAULT_ALARM_DURATION
+    private var vibrateCount = DEFAULT_ALARM_COUNT
+    private var soundDuration = DEFAULT_ALARM_DURATION
+    private var soundCount = DEFAULT_ALARM_COUNT
+
+
 
     override fun takeView(view: View) {
         timerScreenView = view
@@ -43,7 +52,7 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
                         }
                     }
                     //Timer finished, trigger alarm and restart loop
-                    timerScreenView?.triggerAlarm()
+                    triggerAlarm()
                     GlobalScope.launch(Dispatchers.Main) {
                         val minutes = timerInterval/60
                         val seconds = timerInterval%60
@@ -84,21 +93,20 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     }
 
     override fun vibateDurationChanged(duration: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        vibrateDuration = (duration*1000).toLong()
     }
 
     override fun vibateNumPulseChanged(num: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        vibrateCount = num
     }
 
     override fun soundDurationChanged(duration: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        soundDuration = (duration*1000).toLong()
     }
 
     override fun soundNumBeepChanged(num: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        soundCount = num
     }
-
 
     private fun sendUpdateTime(){
         val minutes = timerTime/60
@@ -107,9 +115,14 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     }
 
     private fun restartTimerLoop(){
-        timerTime = timerInterval
-        timerJob = null
-        actionButtonPressed()
+        if(repeatEnabled) {
+            timerTime = timerInterval
+            timerJob = null
+            actionButtonPressed()
+        }
     }
 
+    private fun triggerAlarm(){
+        timerScreenView?.triggerAlarm(vibrateDuration,vibrateCount,soundDuration,soundCount)
+    }
 }

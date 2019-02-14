@@ -12,7 +12,7 @@ interface View {
     fun setVibrateSwitch(isEnabled:Boolean)
     fun populateVibateSettings(numPulses:Int,duration:Float)
     fun populateSoundSettings(numPulses:Int,duration:Float)
-    fun triggerAlarm()
+    fun triggerAlarm(vibeDuration:Long, vibeCount:Int,beepDuration:Long,beepCount:Int)
 }
 
 interface ViewModel: ViewModelBase<View> {

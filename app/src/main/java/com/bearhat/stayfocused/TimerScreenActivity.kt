@@ -1,6 +1,5 @@
 package com.bearhat.stayfocused
 
-import android.app.AlarmManager
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -15,9 +14,9 @@ import android.os.Build
 import android.os.Vibrator
 import android.media.ToneGenerator
 import android.media.AudioManager
-
-
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class TimerScreenActivity : AppCompatActivity(),View{
@@ -169,8 +168,8 @@ class TimerScreenActivity : AppCompatActivity(),View{
 
 
     override fun resetTimer() {
-        minutesText.setText("00")
-        secondsText.setText("00")
+        minutesText.setText("")
+        secondsText.setText("")
     }
 
     override fun setTimerUpdateObservable(data: LiveData<TimerUpdate>) {
@@ -195,23 +194,30 @@ class TimerScreenActivity : AppCompatActivity(),View{
         }
     }
 
-    override fun triggerAlarm() {
+    override fun triggerAlarm(vibeDuration:Long, vibeCount:Int,beepDuration:Long,beepCount:Int) {
+
         val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        val vibrationDuration = 550L // in milliseconds
 
-        for(i in 1..10) {
-            val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 250)
-            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
-
-            // Vibrate for 3 sets of 500 milliseconds
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(vibrationDuration, VibrationEffect.DEFAULT_AMPLITUDE))
-            } else {
-                //deprecated in API 26
-                v.vibrate(vibrationDuration)
+        GlobalScope.launch {
+            for(i in 0..beepCount){
+                val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 250)
+                toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,beepDuration.toInt())
+                delay(150)
             }
+        }
 
-            Thread.sleep(150)
+        GlobalScope.launch {
+
+            for(i in 0..vibeCount) {
+                // Vibrate for 3 sets of 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(vibeDuration, VibrationEffect.DEFAULT_AMPLITUDE))
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(vibeDuration)
+                }
+                delay(150)
+            }
         }
     }
 
@@ -222,12 +228,8 @@ class TimerScreenActivity : AppCompatActivity(),View{
     override fun setSoundSwitch(isEnabled: Boolean) {
         enableSoundSwitch.isChecked = isEnabled
         if(isEnabled){
-            soundDurationText.isClickable = true
-            soundNumberText.isClickable = true
             soundSettingsArea.setBackgroundResource(R.drawable.bg_active_settings_border)
         }else{
-            soundDurationText.isClickable = false
-            soundNumberText.isClickable = false
             soundSettingsArea.setBackgroundResource(R.drawable.bg_inactive_settings_border)
         }
     }
@@ -235,12 +237,12 @@ class TimerScreenActivity : AppCompatActivity(),View{
     override fun setVibrateSwitch(isEnabled: Boolean) {
         enableVibrateSwitch.isChecked = isEnabled
         if(isEnabled){
-            vibrateDurationText.isClickable = true
-            vibateNumberText.isClickable = true
+            vibrateDurationText.isFocusableInTouchMode = true
+            vibateNumberText.isFocusable = true
             vibateSettingsArea.setBackgroundResource(R.drawable.bg_active_settings_border)
         }else{
-            vibrateDurationText.isClickable = false
-            vibateNumberText.isClickable = false
+            vibrateDurationText.isFocusableInTouchMode = true
+            vibateNumberText.isFocusable = true
             vibateSettingsArea.setBackgroundResource(R.drawable.bg_inactive_settings_border)
         }
     }
