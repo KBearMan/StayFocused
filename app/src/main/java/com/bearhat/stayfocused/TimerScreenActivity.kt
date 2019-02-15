@@ -174,17 +174,12 @@ class TimerScreenActivity : AppCompatActivity(),View{
     override fun timerStatusChanged(started: Boolean, timerInterval: Int) {
         if(started){
             actionButton.text = "STOP"
-            minutesText.clearFocus()
-            secondsText.clearFocus()
-            minutesText.isClickable = false
-            secondsText.isClickable = false
         }else{
             actionButton.text = "START"
-            minutesText.isClickable = true
-            secondsText.isClickable = true
             if(timerInterval > 0 ){
-                minutesText.setText("${timerInterval/60}")
-                secondsText.setText("${timerInterval%60}")
+                setTimerText(TimerUpdate(timerInterval/60,timerInterval%60))
+            }else{
+                resetTimer()
             }
         }
     }
@@ -192,26 +187,27 @@ class TimerScreenActivity : AppCompatActivity(),View{
     override fun triggerAlarm(vibeDuration:Long, vibeCount:Int,beepDuration:Long,beepCount:Int) {
 
         val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-
-        GlobalScope.launch {
-            for(i in 0..beepCount){
-                val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 250)
-                toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,beepDuration.toInt())
-                delay(150)
+        if(enableSoundSwitch.isChecked) {
+            GlobalScope.launch {
+                for (i in 0..beepCount) {
+                    val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 250)
+                    toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, beepDuration.toInt())
+                    delay(150)
+                }
             }
         }
-
-        GlobalScope.launch {
-
-            for(i in 0..vibeCount) {
-                // Vibrate for 3 sets of 500 milliseconds
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    v.vibrate(VibrationEffect.createOneShot(vibeDuration, VibrationEffect.DEFAULT_AMPLITUDE))
-                } else {
-                    //deprecated in API 26
-                    v.vibrate(vibeDuration)
+        if(enableVibrateSwitch.isChecked) {
+            GlobalScope.launch {
+                for (i in 0..vibeCount) {
+                    // Vibrate for 3 sets of 500 milliseconds
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(vibeDuration, VibrationEffect.DEFAULT_AMPLITUDE))
+                    } else {
+                        //deprecated in API 26
+                        v.vibrate(vibeDuration)
+                    }
+                    delay(150)
                 }
-                delay(150)
             }
         }
     }
@@ -256,5 +252,4 @@ class TimerScreenActivity : AppCompatActivity(),View{
         minutesText.setText(String.format("%02d", update.minute))
         secondsText.setText(String.format("%02d", update.second))
     }
-
 }

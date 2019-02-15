@@ -7,6 +7,8 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
 
     private val DEFAULT_ALARM_COUNT = 10
     private val DEFAULT_ALARM_DURATION = 550L
+    private val UPPER_COUNT_LIMIT = 25
+    private val UPPER_DURATION_LIMIT = 2.0F
 
     private var timerScreenView:  View? = null
     private var timerUpdateData : MutableLiveData<TimerUpdate> = MutableLiveData()
@@ -27,6 +29,8 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     override fun takeView(view: View) {
         timerScreenView = view
         timerScreenView?.setTimerUpdateObservable(timerUpdateData)
+        timerScreenView?.populateSoundSettings(soundCount,soundDuration.toFloat()/1000F)
+        timerScreenView?.populateVibateSettings(vibrateCount,vibrateDuration.toFloat()/1000F)
     }
 
     override fun dropView() {
@@ -85,19 +89,35 @@ class TimerScreenPresenter: android.arch.lifecycle.ViewModel(),ViewModel{
     }
 
     override fun vibateDurationChanged(duration: Float) {
-        vibrateDuration = (duration*1000).toLong()
+        if(duration > UPPER_DURATION_LIMIT){
+            timerScreenView?.populateVibateSettings(vibrateCount,UPPER_DURATION_LIMIT)
+        }else {
+            vibrateDuration = (duration * 1000).toLong()
+        }
     }
 
     override fun vibateNumPulseChanged(num: Int) {
-        vibrateCount = num
+        if(num > UPPER_COUNT_LIMIT) {
+            timerScreenView?.populateVibateSettings(UPPER_COUNT_LIMIT,vibrateDuration.toFloat()/1000F)
+        }else{
+            vibrateCount = num
+        }
     }
 
     override fun soundDurationChanged(duration: Float) {
-        soundDuration = (duration*1000).toLong()
+        if(duration > UPPER_DURATION_LIMIT){
+            timerScreenView?.populateSoundSettings(soundCount,UPPER_DURATION_LIMIT)
+        }else {
+            soundDuration = (duration * 1000).toLong()
+        }
     }
 
     override fun soundNumBeepChanged(num: Int) {
-        soundCount = num
+        if(num > UPPER_COUNT_LIMIT) {
+            timerScreenView?.populateSoundSettings(UPPER_COUNT_LIMIT,soundDuration.toFloat()/1000F)
+        }else{
+            soundCount = num
+        }
     }
 
     private fun sendUpdateTime(timerToSend:Int){
