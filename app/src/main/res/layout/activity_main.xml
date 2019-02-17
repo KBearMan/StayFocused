@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.bearhat.stayfocused.TimerScreenActivity">
 
-    <Button
+    <ToggleButton
         android:id="@+id/actionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Start"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/bg_action_button"
+        android:textOn="@string/stop_button"
+        android:textOff="@string/start_button"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -24,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="4"
-        android:hint="minutes"
+        android:hint="00"
         android:inputType="number"
         android:numeric="integer"
         android:textAlignment="textEnd"
@@ -40,7 +42,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:ems="4"
-        android:hint="seconds"
+        android:hint="00"
         android:inputType="number"
         android:maxLength="2"
         android:numeric="integer"
@@ -158,7 +160,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="6"
-        android:hint="0 - 2 seconds"
+        android:hint="0 - 2"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="@+id/textView4"
         app:layout_constraintStart_toEndOf="@+id/textView4"
@@ -170,7 +172,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:text="Duration"
+        android:text="Duration (in seconds)"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vibateNumberText" />
@@ -216,7 +218,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="6"
-        android:hint="0 - 2 seconds"
+        android:hint="0 - 2"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="@+id/textView6"
         app:layout_constraintStart_toEndOf="@+id/textView6"
@@ -228,7 +230,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:text="Duration"
+        android:text="Duration (in seconds)"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/soundNumberText" />

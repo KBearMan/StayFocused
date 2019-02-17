@@ -4,6 +4,12 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="settingsInactiveBorder">#aaaaaa</color>
+
+    <color name="actionButtonStartFill">#aaffaa</color>
+    <color name="actionButtonStartBorder">#00ff00</color>
+    <color name="actionButtonStopFill">#ffaaaa</color>
+    <color name="actionButtonStopBorder">#ff0000</color>
+
     <color name="settingsInactiveArea">#bbbbbb</color>
     <color name="settingsActiveBorder">#111111</color>
 

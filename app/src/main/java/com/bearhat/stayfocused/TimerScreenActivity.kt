@@ -173,9 +173,9 @@ class TimerScreenActivity : AppCompatActivity(),View{
 
     override fun timerStatusChanged(started: Boolean, timerInterval: Int) {
         if(started){
-            actionButton.text = "STOP"
+            actionButton.isChecked = true
         }else{
-            actionButton.text = "START"
+            actionButton.isChecked = false
             if(timerInterval > 0 ){
                 setTimerText(TimerUpdate(timerInterval/60,timerInterval%60))
             }else{
@@ -249,7 +249,7 @@ class TimerScreenActivity : AppCompatActivity(),View{
     }
 
     private fun setTimerText(update:TimerUpdate){
-        minutesText.setText(String.format("%02d", update.minute))
-        secondsText.setText(String.format("%02d", update.second))
+        minutesText.setText(if(update.minute > 0){update.minute.toString()}else{""})
+        secondsText.setText(if(update.second > 0){update.second.toString()}else{String.format("%02d", update.second)})
     }
 }
