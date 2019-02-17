@@ -23,7 +23,8 @@ class TimerScreenActivity : AppCompatActivity(),View{
     lateinit var timerScreenPresenter:TimerScreenPresenter
 
     // Create the observer which updates the UI.
-    val timerUpdateObservable = Observer<TimerUpdate> { update ->
+    val timerUpdateObservable
+            = Observer<TimerUpdate> { update ->
         update?.let { setTimerText(update) }
     }
 
